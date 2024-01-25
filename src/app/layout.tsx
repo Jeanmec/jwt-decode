@@ -20,7 +20,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`font-sans ${inter.variable}`}>{children}</body>
+      <body
+        className={`font-sans ${inter.variable} bg-[conic-gradient(at_left,_var(--tw-gradient-stops))] from-sky-600 via-indigo-950 to-sky-600`}
+      >
+        {children}
+      </body>
     </html>
   );
 }

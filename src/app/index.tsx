@@ -37,7 +37,6 @@ export default function HomePage() {
   useEffect(() => {
     if (checkJwt(jwt.value)) {
       decodeJWT(jwt);
-      setCookie("token", jwt.value);
     } else if (jwt.origin) {
       notify("Invalid JWT");
     }
@@ -58,14 +57,20 @@ export default function HomePage() {
     const decodedPayload = jwtDecode(token.value);
     const decodedHeader = jwtDecode(token.value, { header: true });
 
+    console.log(decodedPayload);
+    console.log(decodedHeader);
+
     setJwtDecoded({
       payload: decodedPayload,
       header: decodedHeader,
     });
   };
 
+  // setCookie("token", "salut");
+
   if (hasCookie("token")) {
     const token: string = getCookie("token")!;
+    console.log(token);
     if (checkJwt(token)) {
       decodeJWT({ value: token, origin: "cookie" });
     }
@@ -106,10 +111,9 @@ export default function HomePage() {
           </span>
         </h1>
       </div>
-      <div className={`w-full ${jwtDecoded.payload ? "h-1/6" : "h-2/4"}`}>
+      <div className={` w-full ${jwtDecoded.payload ? "h-1/6" : "h-2/4"}`}>
         <SearchBar setJwt={setJwt} />
       </div>
-
       <div className={` w-full ${jwtDecoded.payload ? "h-4/6" : "h-0"}`}>
         <Decoder header={jwtDecoded.header} payload={jwtDecoded.payload} />
       </div>
