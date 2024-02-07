@@ -1,19 +1,27 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useDebounce } from "use-debounce";
 import { GiPerspectiveDiceSixFacesRandom } from "react-icons/gi";
 
-export default function SearchBar({ setJwt }) {
-  const [input, setInput] = useState("");
+interface jwtInterface {
+  value: string;
+  origin: "clipboard" | "cookie" | "";
+}
+interface SearchBarProps {
+  setJwt: (jwt: jwtInterface) => void;
+}
+
+const SearchBar: React.FC<SearchBarProps> = ({ setJwt, setDefaultJWT }) => {
+  const [input, setInput] = useState<string>();
   const [value] = useDebounce(input, 500);
 
-  const [hoverTextColor, setHoverTextColor] = useState("#ffffff");
+  const [hoverTextColor, setHoverTextColor] = useState<string>("#ffffff");
 
   const handleHover = () => {
     const randomColor = getRandomColor();
     setHoverTextColor(randomColor);
   };
 
-  const getRandomColor = () => {
+  const getRandomColor = (): string => {
     const letters = "0123456789ABCDEF";
     let color = "#";
     for (let i = 0; i < 6; i++) {
@@ -30,12 +38,12 @@ export default function SearchBar({ setJwt }) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ prompt }),
+        body: JSON.stringify({ prompt: input }), // assuming 'prompt' is meant to be 'input'
       });
 
-      const data = await response.json();
-
-      setInput(data.token);
+      const data: object = (await response.json()) as object;
+      const { token } = data as { token: string };
+      setInput(token);
     } catch (error) {
       console.error(error);
     }
@@ -59,19 +67,15 @@ export default function SearchBar({ setJwt }) {
 
   return (
     <div className="group flex items-center">
-      <label htmlFor="simple-search" className="sr-only">
-        Search
-      </label>
-
       <div className="relative flex h-16 w-full group-hover:text-[#00B9F1]">
         <input
           type="text"
-          className=" bg h-16 w-full rounded-lg bg-[#22222347] px-6 py-1 pr-12 text-xl text-white outline outline-1 outline-[#0088ff] duration-300 focus:outline-8 group-hover:outline-8"
+          className="bg h-16 w-full rounded-lg bg-[#22222347] px-6 py-1 pr-12 text-xl text-white outline outline-1 outline-[#0088ff] duration-300 focus:outline-8 group-hover:outline-8"
           onChange={(e) => {
             setInput(e.target.value);
           }}
           onClick={() => handleClipboardCopy()}
-          value={input}
+          value={setDefaultJWT}
         />
 
         <div className="absolute right-2 flex h-full items-center justify-center">
@@ -90,4 +94,6 @@ export default function SearchBar({ setJwt }) {
       </div>
     </div>
   );
-}
+};
+
+export default SearchBar;

@@ -5,16 +5,21 @@ export const TokenPartWrapper = styled.div`
   pre {
     background-color: transparent !important;
     border-radius: 10px;
-    code {
-      color: #fff;
+    color: white;
+    .string {
+      color: #d63aff;
     }
-    span {
-      &.hljs-number {
-        color: #d63aff;
-      }
-      &.hljs-attr {
-        color: #00b9f1;
-      }
+    .number {
+      color: #d63aff;
+    }
+    .boolean {
+      color: blue;
+    }
+    .null {
+      color: magenta;
+    }
+    .key {
+      color: #00b9f1;
     }
   }
 `;

@@ -9,9 +9,10 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Bounce } from "react-toastify";
 
-import { FaGithub } from "react-icons/fa";
+import { PiSealQuestion } from "react-icons/pi";
 
 import { setCookie, getCookie, hasCookie } from "cookies-next";
+import Link from "next/link";
 
 interface jwtInterface {
   value: string;
@@ -36,21 +37,25 @@ export default function HomePage() {
 
   useEffect(() => {
     if (checkJwt(jwt.value)) {
-      decodeJWT(jwt);
-      setCookie("token", jwt.value);
+      if (jwt.origin === "clipboard") {
+        decodeJWT(jwt);
+        setCookie("token", jwt.value);
+      }
     } else if (jwt.origin) {
-      notify("Invalid JWT");
+      notify("JWT invalide");
     }
   }, [jwt]);
 
-  const checkJwt = (jwt: string) => {
-    if (jwt) {
-      const splittedJwt = jwt.split(".");
-      if (splittedJwt.length === 3) {
+  const checkJwt = (jwt: string): boolean => {
+    try {
+      const decodedToken = jwtDecode(jwt);
+      if (decodedToken) {
         return true;
       } else {
         return false;
       }
+    } catch (error) {
+      return false;
     }
   };
 
@@ -64,12 +69,15 @@ export default function HomePage() {
     });
   };
 
-  if (hasCookie("token")) {
-    const token: string = getCookie("token")!;
-    if (checkJwt(token)) {
-      decodeJWT({ value: token, origin: "cookie" });
+  useEffect(() => {
+    if (hasCookie("token")) {
+      const token: string = getCookie("token")!;
+      if (checkJwt(token)) {
+        setJwt({ value: token, origin: "cookie" });
+        decodeJWT({ value: token, origin: "cookie" });
+      }
     }
-  }
+  }, []);
 
   const notify = (message: string) =>
     toast.error(message, {
@@ -96,7 +104,7 @@ export default function HomePage() {
           jwtDecoded.payload ? "h-1/6	text-5xl" : "h-2/4 text-7xl"
         }`}
       >
-        <h1>
+        <h1 className="flex items-baseline">
           <span className="mr-5 bg-gradient-to-r from-[#00B9F1]  to-[#0182fb] bg-[length:100%_10px] bg-bottom bg-no-repeat">
             Decode
           </span>
@@ -104,22 +112,19 @@ export default function HomePage() {
           <span className="ml-5 bg-gradient-to-r from-[#0182fb]  to-[#00B9F1] bg-clip-text text-transparent">
             JWT
           </span>
+          <Link href="/information" className="text-xl">
+            <PiSealQuestion />
+            {/* <BasicModal /> */}
+          </Link>
         </h1>
       </div>
       <div className={`w-full ${jwtDecoded.payload ? "h-1/6" : "h-2/4"}`}>
-        <SearchBar setJwt={setJwt} />
+        <SearchBar setJwt={setJwt} setDefaultJWT={jwt.value} />
       </div>
 
       <div className={` w-full ${jwtDecoded.payload ? "h-4/6" : "h-0"}`}>
         <Decoder header={jwtDecoded.header} payload={jwtDecoded.payload} />
       </div>
-      <a
-        target="_blank"
-        href="https://github.com/Jeanmec"
-        className="absolute bottom-4 right-4 text-3xl text-white transition hover:text-blue-500"
-      >
-        <FaGithub />
-      </a>
     </div>
   );
 }
