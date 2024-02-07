@@ -8,6 +8,7 @@ interface jwtInterface {
 }
 interface SearchBarProps {
   setJwt: (jwt: jwtInterface) => void;
+  setDefaultJWT: jwtInterface;
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({ setJwt, setDefaultJWT }) => {
@@ -75,7 +76,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ setJwt, setDefaultJWT }) => {
             setInput(e.target.value);
           }}
           onClick={() => handleClipboardCopy()}
-          value={setDefaultJWT}
+          value={setDefaultJWT.value}
         />
 
         <div className="absolute right-2 flex h-full items-center justify-center">

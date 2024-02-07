@@ -1,16 +1,16 @@
+import React from "react";
 import prettyJSON from "json-stringify-pretty-compact";
-
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Bounce } from "react-toastify";
-
 import { TokenPartWrapper } from "./tokenPart.style";
-
 import { IoCopy } from "react-icons/io5";
 
-// Ajoutez la syntaxe JSON à PrismLight
+interface TokenPartProps {
+  part: string;
+}
 
-const TokenPart = ({ part }) => {
+const TokenPart: React.FC<TokenPartProps> = ({ part }) => {
   const copyToClipboard = () => {
     navigator.clipboard
       .writeText(JSON.stringify(JSON.parse(part), null, 2))
@@ -29,12 +29,12 @@ const TokenPart = ({ part }) => {
         });
       })
       .catch((error) => {
-        // Gérer les erreurs ici, par exemple en affichant un message d'erreur avec toast.error()
+        // Handle errors here, for example, display an error message with toast.error()
         console.error("Error copying to clipboard:", error);
       });
   };
 
-  const syntaxHighlight = (json) => {
+  const syntaxHighlight = (json: string) => {
     if (!json) return ""; //no JSON from response
 
     json = json

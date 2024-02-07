@@ -119,7 +119,7 @@ export default function HomePage() {
         </h1>
       </div>
       <div className={`w-full ${jwtDecoded.payload ? "h-1/6" : "h-2/4"}`}>
-        <SearchBar setJwt={setJwt} setDefaultJWT={jwt.value} />
+        <SearchBar setJwt={setJwt} setDefaultJWT={jwt} />
       </div>
 
       <div className={` w-full ${jwtDecoded.payload ? "h-4/6" : "h-0"}`}>
