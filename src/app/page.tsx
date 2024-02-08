@@ -42,7 +42,7 @@ export default function HomePage() {
         setCookie("token", jwt.value);
       }
     } else if (jwt.origin) {
-      notify("JWT invalide");
+      notify("Invalid JWT!");
     }
   }, [jwt]);
 
