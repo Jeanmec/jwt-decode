@@ -18,7 +18,8 @@ const generateRandomObject = (): Record<string, string> => {
   const randomObject: Record<string, string> = {};
 
   keys.forEach((key) => {
-    const generatedValue = generate() as string;
+    const generatedValue = generate().join(" ") || "";
+
     randomObject[key] = generatedValue;
   });
 

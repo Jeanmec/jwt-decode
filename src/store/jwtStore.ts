@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-import { type IDecodedJWT } from "../pages/interfaces/jwt";
+import { type IDecodedJWT } from "../interfaces/jwt";
 
 interface JwtState {
   jwt: string | null;

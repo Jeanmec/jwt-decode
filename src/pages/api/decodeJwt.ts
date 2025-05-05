@@ -3,7 +3,7 @@ import {
   type IJWTHeader,
   type IJWTPayload,
   type IDecodedJWT,
-} from "../interfaces/jwt";
+} from "../../interfaces/jwt";
 
 const decodeJWT = (token: string): IDecodedJWT | null => {
   try {
@@ -33,10 +33,7 @@ const decodeJWT = (token: string): IDecodedJWT | null => {
   }
 };
 
-export default function handler(
-  req: NextApiRequest & { body: DecodeJwtRequestBody },
-  res: NextApiResponse,
-) {
+export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const { token } = req.body;
 
   if (!token) {
