@@ -45,17 +45,13 @@ const SearchBar: React.FC = () => {
   const getRandomJwt = async () => {
     try {
       const response = await fetch("/api/jwt", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ prompt: input }),
+        method: "GET",
       });
 
       const data = (await response.json()) as { token: string };
       setInput(data.token);
     } catch (error) {
-      console.error("Erreur lors de la génération du JWT :", error);
+      console.error("Error fetching random JWT:", error);
     }
   };
 
@@ -66,7 +62,7 @@ const SearchBar: React.FC = () => {
         setInput(text);
       }
     } catch (err) {
-      console.error("Erreur lors de la lecture du presse-papiers :", err);
+      console.error("Error reading clipboard contents: ", err);
     }
   };
 

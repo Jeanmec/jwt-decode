@@ -26,7 +26,7 @@ const Decoder: React.FC = () => {
           setJwtDecoded(data.decoded);
         }
       } catch (error) {
-        console.error("Erreur lors du décodage du JWT :", error);
+        console.error("Error decoding JWT:", error);
       }
     } else {
       notifyError("Invalid JWT");
@@ -40,7 +40,7 @@ const Decoder: React.FC = () => {
       }
     };
 
-    run().catch((error) => console.error("Erreur dans useEffect:", error));
+    run().catch((error) => console.error("Error: ", error));
   }, [jwt, setJwtDecoded]);
 
   return (

@@ -28,7 +28,7 @@ const decodeJWT = (token: string): IDecodedJWT | null => {
       signature,
     };
   } catch (error) {
-    console.error("Erreur lors du décodage du JWT :", error);
+    console.error("Error decoding JWT:", error);
     return null;
   }
 };
