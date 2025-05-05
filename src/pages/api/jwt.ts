@@ -9,16 +9,16 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
   const token = jwt.sign(randomObject, randomJwtSignature);
 
-  res.status(200).json({ token });
+  res.status(200).json({ token, randomObject, signature: randomJwtSignature });
 }
 
 const generateRandomObject = (): Record<string, string> => {
-  const keys = generate({ min: 200, max: 500 });
+  const keys = generate({ min: 20, max: 50 });
 
   const randomObject: Record<string, string> = {};
 
   keys.forEach((key) => {
-    const generatedValue = generate()[0]!;
+    const generatedValue = generate() as string;
     randomObject[key] = generatedValue;
   });
 

@@ -1,4 +1,3 @@
-// Import React and Next.js modules
 import React from "react";
 import "../styles/globals.scss";
 
@@ -13,7 +12,6 @@ const inter = Inter({
   variable: "--font-sans",
 });
 
-// Component function
 const JwtInfoPage: React.FC = () => {
   return (
     <div

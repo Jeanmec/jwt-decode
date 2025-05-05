@@ -1,129 +1,33 @@
 "use client";
-import SearchBar from "~/components/searchBar";
-import { jwtDecode } from "jwt-decode";
+import Input from "~/components/input";
 
-import { useEffect, useState } from "react";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+import { useJwtStore } from "~/store/jwtStore";
+
+import Title from "~/components/Title";
+
 import Decoder from "~/components/decoder";
 
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { Bounce } from "react-toastify";
-
-import { PiSealQuestion } from "react-icons/pi";
-
-import { setCookie, getCookie, hasCookie } from "cookies-next";
-import Link from "next/link";
-
-interface jwtInterface {
-  value: string;
-  origin: "clipboard" | "cookie" | "";
-}
-
-interface JwtDecodedInterface {
-  payload: any;
-  header: any;
-}
-
 export default function HomePage() {
-  const [jwtDecoded, setJwtDecoded] = useState<JwtDecodedInterface>({
-    payload: null,
-    header: null,
-  });
-
-  const [jwt, setJwt] = useState<jwtInterface>({
-    value: "",
-    origin: "",
-  });
-
-  useEffect(() => {
-    if (checkJwt(jwt.value)) {
-      if (jwt.origin === "clipboard") {
-        decodeJWT(jwt);
-        setCookie("token", jwt.value);
-      }
-    } else if (jwt.origin) {
-      notify("Invalid JWT!");
-    }
-  }, [jwt]);
-
-  const checkJwt = (jwt: string): boolean => {
-    try {
-      const decodedToken = jwtDecode(jwt);
-      if (decodedToken) {
-        return true;
-      } else {
-        return false;
-      }
-    } catch (error) {
-      return false;
-    }
-  };
-
-  const decodeJWT = (token: jwtInterface) => {
-    const decodedPayload = jwtDecode(token.value);
-    const decodedHeader = jwtDecode(token.value, { header: true });
-
-    setJwtDecoded({
-      payload: decodedPayload,
-      header: decodedHeader,
-    });
-  };
-
-  useEffect(() => {
-    if (hasCookie("token")) {
-      const token: string = getCookie("token")!;
-      if (checkJwt(token)) {
-        setJwt({ value: token, origin: "cookie" });
-        decodeJWT({ value: token, origin: "cookie" });
-      }
-    }
-  }, []);
-
-  const notify = (message: string) =>
-    toast.error(message, {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-      transition: Bounce,
-    });
+  const jwtDecoded = useJwtStore((state) => state.jwtDecoded);
 
   return (
     <div
-      className={`container mx-auto flex h-screen w-screen flex-col items-center  gap-y-8 ${
-        jwtDecoded.payload ? "transition	" : "justify-center"
+      className={`mx-auto flex min-h-screen flex-col items-center gap-y-8 px-8 md:w-9/12 xl:w-6/12 ${
+        jwtDecoded ? "transition" : "h-screen w-screen justify-center"
       }`}
     >
       <ToastContainer />
-      <div
-        className={`flex   items-center justify-center  font-bold text-white  ${
-          jwtDecoded.payload ? "h-1/6	text-5xl" : "h-2/4 text-7xl"
-        }`}
-      >
-        <h1 className="flex items-baseline">
-          <span className="mr-5 bg-gradient-to-r from-[#00B9F1]  to-[#0182fb] bg-[length:100%_10px] bg-bottom bg-no-repeat">
-            Decode
-          </span>
-          your
-          <span className="ml-5 bg-gradient-to-r from-[#0182fb]  to-[#00B9F1] bg-clip-text text-transparent">
-            JWT
-          </span>
-          <Link href="/information" className="text-xl">
-            <PiSealQuestion />
-            {/* <BasicModal /> */}
-          </Link>
-        </h1>
-      </div>
-      <div className={`w-full ${jwtDecoded.payload ? "h-1/6" : "h-2/4"}`}>
-        <SearchBar setJwt={setJwt} setDefaultJWT={jwt} />
+      <Title />
+
+      <div className={`w-full  ${jwtDecoded ? "h-1/6" : "h-2/4"}`}>
+        <Input />
       </div>
 
-      <div className={` w-full ${jwtDecoded.payload ? "h-4/6" : "h-0"}`}>
-        <Decoder header={jwtDecoded.header} payload={jwtDecoded.payload} />
+      <div className={` w-full ${jwtDecoded ? "h-4/6" : "h-0"}`}>
+        <Decoder />
       </div>
     </div>
   );

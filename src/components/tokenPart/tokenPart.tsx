@@ -1,41 +1,28 @@
 import React from "react";
 import prettyJSON from "json-stringify-pretty-compact";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { Bounce } from "react-toastify";
 import { TokenPartWrapper } from "./tokenPart.style";
 import { IoCopy } from "react-icons/io5";
+import { notifySuccess } from "~/utils/notify";
 
 interface TokenPartProps {
-  part: string;
+  title: string;
+  object: string;
 }
 
-const TokenPart: React.FC<TokenPartProps> = ({ part }) => {
+const TokenPart: React.FC<TokenPartProps> = ({ object, title }) => {
   const copyToClipboard = () => {
     navigator.clipboard
-      .writeText(JSON.stringify(JSON.parse(part), null, 2))
+      .writeText(JSON.stringify(JSON.parse(object), null, 2))
       .then(() => {
-        toast.success("Copied to clipboard", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-          transition: Bounce,
-          isLoading: false,
-        });
+        notifySuccess("Copied to clipboard");
       })
       .catch((error) => {
-        // Handle errors here, for example, display an error message with toast.error()
         console.error("Error copying to clipboard:", error);
       });
   };
 
   const syntaxHighlight = (json: string) => {
-    if (!json) return ""; //no JSON from response
+    if (!json) return "";
 
     json = json
       .replace(/&/g, "&amp;")
@@ -63,21 +50,24 @@ const TokenPart: React.FC<TokenPartProps> = ({ part }) => {
 
   return (
     <TokenPartWrapper>
-      <div className="w-fibg-slate-100 relative h-full w-9/12 backdrop-opacity-10">
-        <div className="my-2 h-fit max-h-40 w-full overflow-y-scroll rounded-2xl border-2 border-gray-800 bg-[#0000001a] px-6 py-4">
-          <pre
-            dangerouslySetInnerHTML={{
-              __html: syntaxHighlight(
-                prettyJSON(JSON.parse(part), { maxLength: 0, indent: 5 }),
-              ),
-            }}
-          />
+      <div className=" h-full w-full backdrop-opacity-10">
+        <div className="mb-1 flex items-center justify-between">
+          <h2 className="font-bold text-slate-100">{title}</h2>
           <button
-            className="fixed right-4 top-2 text-slate-200"
+            className="mr-2 text-xl text-slate-200"
             onClick={copyToClipboard}
           >
             <IoCopy />
           </button>
+        </div>
+        <div className="relative h-fit max-h-40 w-full overflow-y-auto rounded-xl border-2 border-gray-800 bg-[#0000001a] px-6 py-4">
+          <pre
+            dangerouslySetInnerHTML={{
+              __html: syntaxHighlight(
+                prettyJSON(JSON.parse(object), { maxLength: 0, indent: 5 }),
+              ),
+            }}
+          />
         </div>
       </div>
     </TokenPartWrapper>
